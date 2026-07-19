@@ -17,6 +17,7 @@ import ru.appsmile.rickandmorty.model.ResultItem
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
+import ru.appsmile.rickandmorty.ui.episodes.EpisodesActivity
 
 class DetailActivity : AppCompatActivity() {
 
@@ -122,6 +123,15 @@ class DetailActivity : AppCompatActivity() {
             character.episode.size
         )
         textViewCreatedValue.text = formatCreatedDate(character.created)
+        buttonEpisodes.setOnClickListener {
+            startActivity(
+                EpisodesActivity.newIntent(
+                    this@DetailActivity,
+                    character.name,
+                    character.episode
+                )
+            )
+        }
     }
 
     private fun formatCreatedDate(rawDate: String): String {

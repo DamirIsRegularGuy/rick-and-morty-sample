@@ -58,3 +58,20 @@ data class LocationItem(
     @SerializedName("url")
     val url: String
 ) : Serializable
+
+/**
+ * Ответ /episode/{id или ids} — для одного id API возвращает объект, а для нескольких
+ * (через запятую) — массив. Это учитывается на уровне CharacterRepository.getEpisodes.
+ */
+data class EpisodeItem(
+    @SerializedName("id")
+    val id: Int,
+    @SerializedName("name")
+    val name: String,
+    @SerializedName("air_date")
+    val airDate: String,
+    @SerializedName("episode")
+    val episodeCode: String, // формат "S01E01"
+    @SerializedName("created")
+    val created: String
+) : Serializable

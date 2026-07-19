@@ -169,6 +169,12 @@
                             android:id="@+id/textViewEpisodeCountValue"
                             style="@style/DetailRowValue"
                             tools:text="24 эпизода" />
+                        <Button
+                            android:id="@+id/buttonEpisodes"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="Посмотреть эпизоды"/>
                     </LinearLayout>
 
                     <View style="@style/DetailDivider" />

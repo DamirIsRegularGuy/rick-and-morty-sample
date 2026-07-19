@@ -27,4 +27,9 @@
     <string name="action_favorite">Избранное</string>
     <string name="action_share">Поделиться</string>
     <string name="share_character_format">Смотри, кого я нашёл в Rick and Morty: %1$s (%2$s, %3$s). Последний раз видели здесь: %4$s</string>
+    <string name="episodes_title_format">Эпизоды: %1$s</string>
+
+    <string name="season_format">Сезон %1$d</string>
+
+    <string name="episode_air_date_format">Эпизод %1$d • Дата выхода: %2$s</string>
 </resources>

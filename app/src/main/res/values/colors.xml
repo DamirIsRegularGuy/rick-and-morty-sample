@@ -13,4 +13,5 @@
     <color name="dead">#D63D2E</color>
     <color name="unknown">#9E9E9E</color>
     <color name="favorite">#FFEF5350</color>
+    <color name="episode_badge">#FF26A69A</color>
 </resources>

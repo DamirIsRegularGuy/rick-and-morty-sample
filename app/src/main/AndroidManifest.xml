@@ -31,6 +31,12 @@
             android:exported="false"
             android:parentActivityName=".ui.main.MainActivity" />
 
+        <activity
+            android:name=".ui.episodes.EpisodesActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.detail.DetailActivity" />
+
     </application>
+
 
 </manifest>
