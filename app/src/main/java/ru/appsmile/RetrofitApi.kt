@@ -1,21 +1,31 @@
-package ru.appsmile
+package ru.appsmile.rickandmorty.network
 
-import retrofit2.Call
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.appsmile.rickandmorty.Item
-import ru.appsmile.rickandmorty.RickAndMortyApiService
 
 object RetrofitApi {
-    private val retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl("https://rickandmortyapi.com/api/")
-        .addConverterFactory(GsonConverterFactory.create())
+
+    private const val BASE_URL = "https://rickandmortyapi.com/api/"
+
+    private val loggingInterceptor = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BASIC
+    }
+
+    private val okHttpClient = OkHttpClient.Builder()
+        .addInterceptor(loggingInterceptor)
         .build()
 
+    private val retrofit: Retrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
 
-    private val rickAndMortyApiService = retrofit.create(RickAndMortyApiService::class.java)
-
-    fun getCharacter(): Call<Item> = rickAndMortyApiService.getCharacter()
+    val service: RickAndMortyApiService by lazy {
+        retrofit.create(RickAndMortyApiService::class.java)
+    }
 }
-
-

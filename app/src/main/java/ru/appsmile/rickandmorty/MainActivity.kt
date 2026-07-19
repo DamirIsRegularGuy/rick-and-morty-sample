@@ -1,97 +1,144 @@
-package ru.appsmile.rickandmorty
+package ru.appsmile.rickandmorty.ui.main
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.Gson
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
-import ru.appsmile.RetrofitApi
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.launch
+import ru.appsmile.rickandmorty.R
+import ru.appsmile.rickandmorty.adapter.CharacterListItem
 import ru.appsmile.rickandmorty.adapter.RickAndMortyAdapter
 import ru.appsmile.rickandmorty.databinding.ActivityMainBinding
+import ru.appsmile.rickandmorty.ui.detail.DetailActivity
+import ru.appsmile.rickandmorty.ui.favorites.FavoritesActivity
 
 class MainActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityMainBinding
+    private val viewModel: MainViewModel by viewModels()
+    private lateinit var adapter: RickAndMortyAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
 
-        /* val user = User(
-             name = "Anton",
-             userAge = 10,
-             phoneNumber = "+992900000001",
-             isDead = true
-         )
+        setupRecyclerView()
+        setupSwipeRefresh()
+        setupStatusFilter()
+        observeUiState()
+    }
 
+    private fun setupRecyclerView() {
+        adapter = RickAndMortyAdapter(
+            onItemClick = { character ->
+                startActivity(DetailActivity.newIntent(this, character))
+            },
+            onFavoriteClick = { character ->
+                viewModel.toggleFavorite(character)
+            }
+        )
 
-         val user2 = User(
-             name = "Vlad",
-             userAge = 30,
-             phoneNumber = "+7900000001",
-             isDead = false,
-             capital = listOf("Машина", "Дом", "Водка")
-         )
+        val layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.layoutManager = layoutManager
+        binding.recyclerView.adapter = adapter
 
+        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy <= 0) return
 
-         val list = listOf(user, user2)
+                val totalItemCount = layoutManager.itemCount
+                val lastVisible = layoutManager.findLastVisibleItemPosition()
 
-         Log.d("TAG_USER", "user: $user")
-
-         val gson = Gson()
-
-         val jsonUser = gson.toJson(user)
-
-
-         Log.d("TAG_USER", "jsonUser: $jsonUser")
-
-         val jsonString = """{"age":11,"isDead":false,"name":"Sergey","phone_number":"значение", "country":"Tajikistan"}"""
-
-         val jsonString2 = """{"age":11,"isDead":false,"user_name":"Sergey","phone_number":"значение", "user_country":"Tajikistan"}"""
-
-         val userNew = gson.fromJson(jsonString, User::class.java)
-
-
-         Log.d("TAG_USER", "userNew: $userNew")
-
-         val userNew2 = gson.fromJson(jsonString2, User::class.java)
-
-
-         Log.d("TAG_USER", "userNew2: $userNew2")
-
-
-         val userJsonString = gson.toJson(list)
-
-         Log.d("TAG_USER", "userJsonString: $userJsonString")*/
-
-        binding.root.layoutManager = LinearLayoutManager(this)
-
-
-        RetrofitApi.getCharacter().enqueue(object : Callback<Item> {
-            override fun onResponse(p0: Call<Item>, p1: Response<Item>) {
-
-                if (p1.isSuccessful) {
-                    val resultList = p1.body()?.results ?: emptyList()
-                    binding.root.adapter = RickAndMortyAdapter(resultList)
-                    // все океей
-                } else {
-
-                    Log.d("TAG_TEST", "!isSuccessful: что то пошло не так")
-                    // что то пошло не так
+                if (lastVisible >= totalItemCount - 4) {
+                    viewModel.loadNextPage()
                 }
             }
+        })
+    }
 
-            override fun onFailure(p0: Call<Item>, p1: Throwable) {
+    private fun setupSwipeRefresh() {
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.refresh()
+        }
+    }
 
-                Log.d("TAG_TEST", "onFailure: вообще что то пошло не так ${p1.message}")
+    private fun setupStatusFilter() = with(binding) {
+        chipGroupStatus.setOnCheckedStateChangeListener { _, checkedIds ->
+            val status = when (checkedIds.firstOrNull()) {
+                chipAlive.id -> "alive"
+                chipDead.id -> "dead"
+                chipUnknown.id -> "unknown"
+                else -> null
+            }
+            viewModel.onStatusFilterChanged(status)
+        }
+    }
+
+    private fun observeUiState() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    val listItems = state.items.map { character ->
+                        CharacterListItem(character, isFavorite = character.id in state.favoriteIds)
+                    }
+                    adapter.submitList(listItems)
+
+                    binding.swipeRefresh.isRefreshing = false
+                    binding.progressBar.isVisible = state.isLoading
+                    binding.recyclerView.isVisible = state.items.isNotEmpty()
+
+                    val showFullScreenError = state.errorMessage != null && state.items.isEmpty()
+                    binding.textViewError.isVisible = showFullScreenError
+                    binding.textViewError.text = state.errorMessage
+
+                    if (state.errorMessage != null && state.items.isNotEmpty()) {
+                        Toast.makeText(this@MainActivity, state.errorMessage, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+
+        val searchItem = menu.findItem(R.id.action_search)
+        val searchView = searchItem.actionView as SearchView
+        searchView.queryHint = getString(R.string.search_hint)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                viewModel.onSearchQueryChanged(query.orEmpty())
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                viewModel.onSearchQueryChanged(newText.orEmpty())
+                return true
             }
         })
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_favorites) {
+            startActivity(Intent(this, FavoritesActivity::class.java))
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

@@ -6,6 +6,9 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
     app:cardBackgroundColor="@color/card_background"
     app:cardCornerRadius="8dp"
     app:cardElevation="0dp">
@@ -20,6 +23,7 @@
             android:id="@+id/image_view"
             android:layout_width="200dp"
             android:layout_height="200dp"
+            android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -36,10 +40,23 @@
             android:maxLines="2"
             android:textColor="@color/white"
             android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/image_view_favorite"
             app:layout_constraintStart_toEndOf="@id/image_view"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Rick" />
+
+        <ImageView
+            android:id="@+id/image_view_favorite"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="16dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/action_favorite"
+            android:padding="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_favorite_border"
+            tools:tint="@color/white" />
 
         <TextView
             android:id="@+id/text_view_alive_status"
@@ -61,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:maxLines="1"
-            android:text="Last known location:"
+            android:text="@string/label_last_known_location"
             android:textColor="@color/subtitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/text_view_alive_status"
@@ -85,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:maxLines="1"
-            android:text="First seen in:"
+            android:text="@string/label_first_seen"
             android:textColor="@color/subtitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/text_view_last_known_location"
@@ -96,6 +113,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
+            android:layout_marginBottom="16dp"
             android:maxLines="1"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"

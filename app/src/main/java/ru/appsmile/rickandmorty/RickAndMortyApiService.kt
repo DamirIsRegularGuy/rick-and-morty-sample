@@ -1,39 +1,15 @@
-package ru.appsmile.rickandmorty
+package ru.appsmile.rickandmorty.network
 
-import com.google.gson.annotations.SerializedName
-import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Query
+import ru.appsmile.rickandmorty.model.CharacterResponse
 
 interface RickAndMortyApiService {
+
     @GET("character")
-    fun getCharacter(): Call<Item>
+    suspend fun getCharacters(
+        @Query("page") page: Int,
+        @Query("name") name: String? = null,
+        @Query("status") status: String? = null
+    ): CharacterResponse
 }
-
-data class Item(
-    @SerializedName("results")
-    val results: List<ResultItem>
-)
-
-data class ResultItem(
-    @SerializedName("name")
-    val name: String,
-    @SerializedName("status")
-    val status: String,
-    @SerializedName("species")
-    val species: String,
-    @SerializedName("image")
-    val image: String,
-
-    @SerializedName("origin")
-    val origin: LocationItem,
-
-    @SerializedName("location")
-    val location: LocationItem
-)
-
-data class LocationItem(
-    @SerializedName("name")
-    val name: String,
-    @SerializedName("url")
-    val url: String
-)

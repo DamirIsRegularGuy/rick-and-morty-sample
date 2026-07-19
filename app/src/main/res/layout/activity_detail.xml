@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".ui.detail.DetailActivity">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/transparent"
+        android:elevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIconTint="@color/white" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="24dp">
+
+            <!-- Hero-баннер: фото + градиент + имя/статус поверх -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="280dp">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/app_name"
+                    android:scaleType="centerCrop"
+                    tools:src="@tools:sample/avatars" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="140dp"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/bg_gradient_scrim" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:id="@+id/textViewName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-black"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:textColor="@color/white"
+                        android:textSize="26sp"
+                        tools:text="Rick Sanchez" />
+
+                    <TextView
+                        android:id="@+id/textViewStatusSpecies"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:drawablePadding="8dp"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        app:drawableStartCompat="@drawable/ic_circle"
+                        tools:text="Alive — Human" />
+
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <!-- Карточка с подробностями -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="8dp">
+
+                    <!-- Пол -->
+                    <LinearLayout
+                        style="@style/DetailRow">
+                        <TextView
+                            style="@style/DetailRowLabel"
+                            android:text="@string/label_gender" />
+                        <TextView
+                            android:id="@+id/textViewGenderValue"
+                            style="@style/DetailRowValue"
+                            tools:text="Male" />
+                    </LinearLayout>
+
+                    <View style="@style/DetailDivider" />
+
+                    <!-- Тип -->
+                    <LinearLayout
+                        style="@style/DetailRow">
+                        <TextView
+                            style="@style/DetailRowLabel"
+                            android:text="@string/label_type" />
+                        <TextView
+                            android:id="@+id/textViewTypeValue"
+                            style="@style/DetailRowValue"
+                            tools:text="Genetic experiment" />
+                    </LinearLayout>
+
+                    <View style="@style/DetailDivider" />
+
+                    <!-- Происхождение -->
+                    <LinearLayout
+                        style="@style/DetailRow">
+                        <TextView
+                            style="@style/DetailRowLabel"
+                            android:text="@string/label_origin" />
+                        <TextView
+                            android:id="@+id/textViewOriginValue"
+                            style="@style/DetailRowValue"
+                            tools:text="Earth (C-137)" />
+                    </LinearLayout>
+
+                    <View style="@style/DetailDivider" />
+
+                    <!-- Последнее известное местоположение -->
+                    <LinearLayout
+                        style="@style/DetailRow">
+                        <TextView
+                            style="@style/DetailRowLabel"
+                            android:text="@string/label_location" />
+                        <TextView
+                            android:id="@+id/textViewLocationValue"
+                            style="@style/DetailRowValue"
+                            tools:text="Citadel of Ricks" />
+                    </LinearLayout>
+
+                    <View style="@style/DetailDivider" />
+
+                    <!-- Кол-во эпизодов -->
+                    <LinearLayout
+                        style="@style/DetailRow">
+                        <TextView
+                            style="@style/DetailRowLabel"
+                            android:text="@string/label_episodes" />
+                        <TextView
+                            android:id="@+id/textViewEpisodeCountValue"
+                            style="@style/DetailRowValue"
+                            tools:text="24 эпизода" />
+                    </LinearLayout>
+
+                    <View style="@style/DetailDivider" />
+
+                    <!-- Дата добавления в базу -->
+                    <LinearLayout
+                        style="@style/DetailRow"
+                        android:paddingBottom="12dp">
+                        <TextView
+                            style="@style/DetailRowLabel"
+                            android:text="@string/label_created" />
+                        <TextView
+                            android:id="@+id/textViewCreatedValue"
+                            style="@style/DetailRowValue"
+                            tools:text="4 декабря 2017" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

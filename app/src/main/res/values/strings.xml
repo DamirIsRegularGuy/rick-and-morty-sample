@@ -1,3 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">RickAndMorty</string>
+    <string name="app_name">Rick and Morty</string>
+
+    <string name="status_species_format">%1$s — %2$s</string>
+    <string name="search_hint">Поиск персонажа…</string>
+    <string name="unknown_value">Неизвестно</string>
+
+    <string name="label_last_known_location">Последнее известное местоположение</string>
+    <string name="label_first_seen">Впервые замечен в</string>
+
+    <string name="label_gender">Пол</string>
+    <string name="label_type">Тип</string>
+    <string name="label_origin">Место происхождения</string>
+    <string name="label_location">Последнее известное местоположение</string>
+    <string name="label_episodes">Появлений в эпизодах</string>
+    <string name="label_created">Добавлен в базу</string>
+
+    <string name="filter_all">Все</string>
+    <string name="filter_alive">Живые</string>
+    <string name="filter_dead">Мертвые</string>
+    <string name="filter_unknown">Неизвестно</string>
+
+    <string name="favorites_title">Избранное</string>
+    <string name="favorites_empty">Тут пока пусто — добавьте персонажей в избранное, нажав на сердечко</string>
+
+    <string name="action_favorite">Избранное</string>
+    <string name="action_share">Поделиться</string>
+    <string name="share_character_format">Смотри, кого я нашёл в Rick and Morty: %1$s (%2$s, %3$s). Последний раз видели здесь: %4$s</string>
 </resources>
